@@ -4,8 +4,8 @@ function computerPlay() {
     return items[index]
 }
 
-function play(player, computerSelection) {
-
+function play(playerSelection, computerSelection) {
+    let player = playerSelection.toLowerCase()
     let computer = computerSelection.toLowerCase()
     if (player === "rock") {
         if (computer === "rock") {
@@ -47,41 +47,39 @@ function play(player, computerSelection) {
     }
 }
 
-function game() {
-    // play 5  times
-    let playerScore = 0
-    let computerScore = 0
+const container = document.querySelector("body")
 
-    for(i=0; i<5; i++) {
-        let player = window.prompt("Enter your selection:").toLowerCase();
-        while (player !== "rock"
-        && player !== "paper"
-        && player !== "scissors" ){
-            alert ("wrong input, please enter again")
-            player = window.prompt("Enter your selection:").toLowerCase();
-        }
-        let result = play(player, computerPlay())
-        
+const div = document.createElement('div');
+container.appendChild(div);
+
+let playerScore = 0
+let computerScore = 0
+let round = 0
+
+const buttons = Array.from(document.querySelectorAll(".btn"));
+buttons.forEach(btn => btn.addEventListener('click', function(e) {
+    if (playerScore === 5) {
+        const para1 = document.createElement('p');
+        para1.textContent = "You won!"
+        div.prepend(para1)
+    } else if (computerScore === 5) {
+        const para1 = document.createElement('p');
+        para1.textContent = "Computer won!"
+        div.prepend(para1);
+    } else {
+        result = play(`${btn.textContent}`, computerPlay())
+        const para = document.createElement('p');
+        para.setAttribute('style', 'white-space: pre;');
         if(result === 1) {
-            alert(`you won #${i} round`)
-            playerScore += 1
+            playerScore += 1;
         } else if (result === -1) {
-            alert(`you lost #${i} round`)
-            computerScore += 1
-        } else {
-            alert (`#${i} round is a tie`)
+            computerScore += 1;
         }
-    }
+        round++;
+        para.textContent =  `Round ${round} \n
+                             Your score is ${playerScore} \n
+                             Computer score is ${computerScore}`;
 
-    if (playerScore === computerScore) {
-        return 'Tie'
-    }
-
-    if(playerScore > computerScore) {
-        return `You won with a score ${playerScore}`
-    }
-
-    return `You lost with a score ${playerScore}`
-}
-
-console.log(game())
+        div.prepend(para); 
+    } 
+}));
